@@ -1,0 +1,6 @@
+# Local secrets (TMDB key used by scripts/build-movies.mjs)
+.env
+
+node_modules/
+.DS_Store
+Thumbs.db

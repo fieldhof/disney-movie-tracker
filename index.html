@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Disney Movie Tracker</title>
+  <meta name="description" content="Browse every Walt Disney Animation, Pixar and DisneyToon movie, tick off the ones you've seen and get a suggestion for what to watch next.">
+  <meta name="theme-color" content="#0a0e1a">
+  <meta name="color-scheme" content="dark">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://image.tmdb.org">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body data-view="home">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar" id="topbar">
+    <a class="brand" href="#/" aria-label="Disney Movie Tracker, home">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+        <defs><linearGradient id="brand-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b6cff"/><stop offset="1" stop-color="#36c2ff"/></linearGradient></defs>
+        <rect width="64" height="64" rx="16" fill="url(#brand-g)"/>
+        <path d="M32 12c2 11.5 6.5 16 18 18-11.5 2-16 6.5-18 18-2-11.5-6.5-16-18-18 11.5-2 16-6.5 18-18z" fill="#fff"/>
+        <circle cx="49" cy="49" r="3.5" fill="#fff" opacity=".85"/>
+      </svg>
+      <span class="brand-name">Disney Movie <b>Tracker</b></span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <a href="#/" data-nav="home">Home</a>
+      <a href="#/browse" data-nav="browse">All movies</a>
+      <a href="#/browse?status=watched" data-nav="watched">Watched</a>
+    </nav>
+
+    <div class="topbar-actions">
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg>
+        <span class="sr-only">Search movies</span>
+        <input id="search" type="search" placeholder="Titles, voices, years…" autocomplete="off" enterkeyhint="search" spellcheck="false">
+      </label>
+      <button class="btn btn-magic btn-suggest" type="button" data-action="suggest">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><g fill="currentColor" stroke="none"><circle cx="8.5" cy="8.5" r="1.4"/><circle cx="15.5" cy="8.5" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="8.5" cy="15.5" r="1.4"/><circle cx="15.5" cy="15.5" r="1.4"/></g></svg>
+        <span>Suggest a movie</span>
+      </button>
+      <button class="account-btn" id="account-btn" type="button" data-action="account" aria-label="Your progress"></button>
+    </div>
+  </header>
+
+  <main id="main">
+    <h1 class="sr-only">Disney Movie Tracker</h1>
+
+    <section id="view-home" class="view" aria-label="Home">
+      <div class="hero" id="hero"></div>
+      <section class="progress" id="progress" aria-label="Your progress"></section>
+      <div class="rows" id="rows"></div>
+    </section>
+
+    <section id="view-browse" class="view browse" aria-labelledby="browse-title" hidden>
+      <div class="browse-head">
+        <div>
+          <h2 id="browse-title">All movies</h2>
+          <p id="browse-count" class="muted"></p>
+        </div>
+        <button class="btn btn-ghost btn-sm" type="button" id="clear-search" data-action="clear-search" hidden>Clear search</button>
+      </div>
+      <div class="filters">
+        <div class="chips" role="group" aria-label="Show">
+          <button class="chip" type="button" data-action="status" data-value="all">All</button>
+          <button class="chip" type="button" data-action="status" data-value="unwatched">Not watched</button>
+          <button class="chip" type="button" data-action="status" data-value="watched">Watched</button>
+        </div>
+        <div class="selects">
+          <label><span class="sr-only">Studio</span><select id="f-studio" class="select" data-filter="studio"></select></label>
+          <label><span class="sr-only">Era</span><select id="f-era" class="select" data-filter="era"></select></label>
+          <label><span class="sr-only">Release type</span><select id="f-type" class="select" data-filter="type"></select></label>
+          <label><span class="sr-only">Sort by</span>
+            <select id="f-sort" class="select" data-filter="sort">
+              <option value="date-asc">Oldest first</option>
+              <option value="date-desc">Newest first</option>
+              <option value="title">Title A–Z</option>
+              <option value="runtime">Shortest first</option>
+              <option value="rating">Highest rated</option>
+              <option value="recent">Recently watched</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="grid" id="grid"></div>
+      <p class="empty" id="grid-empty" hidden></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>A fan-made tracker for Walt Disney Animation Studios, Pixar and DisneyToon Studios films. Not affiliated with or endorsed by The Walt Disney Company.</p>
+    <p>Movie data and images from <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB</a>. This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+  </footer>
+
+  <nav class="tabbar" aria-label="Main">
+    <a href="#/" data-nav="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5L12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5.5h-5V20H5a1 1 0 0 1-1-1z"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="#/browse" data-nav="browse">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg>
+      <span>All movies</span>
+    </a>
+    <button type="button" data-action="suggest" class="tabbar-suggest">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><g fill="currentColor" stroke="none"><circle cx="8.5" cy="8.5" r="1.4"/><circle cx="15.5" cy="8.5" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="8.5" cy="15.5" r="1.4"/><circle cx="15.5" cy="15.5" r="1.4"/></g></svg>
+      <span>Suggest</span>
+    </button>
+    <a href="#/browse?status=watched" data-nav="watched">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.75"/><path d="M8 12.3l2.8 2.8L16.2 9.6"/></svg>
+      <span>Watched</span>
+    </a>
+  </nav>
+
+  <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+</body>
+</html>
